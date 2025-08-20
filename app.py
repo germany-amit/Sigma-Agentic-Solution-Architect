@@ -132,16 +132,22 @@ with A:
 
     if st.button("Generate Architecture", key="arch"):
         arch = {
-            "requirements": reqs,
-            "components": components,
-            "protocols": protocols,
-            "nfr": nonfunc,
-            "risks": risks,
-            "flows": [
-                "Client→API Gateway→Lambda→(S3/RDS)→SageMaker/Bedrock→Response",
-                "SAP→(PI/PO|RFC)→EventBridge→Lambda→S3/RDS",
-                "Monitoring→Metrics+Logs→Alerts",
-            ]
+            "Solution Name": "Customer Churn Prediction and Retention Platform",
+            "Business Goals": reqs,
+            "Architecture Layers": {
+                "Ingestion": f"SAP ERP via {components} with {protocols} protocols",
+                "Processing": "Data transformation and enrichment using AWS Lambda",
+                "AI/ML": "Churn prediction models deployed on AWS SageMaker/Bedrock",
+                "API/Integration": "Secure API endpoint via AWS API Gateway for CRM/CSM consumption",
+                "Persistence": "Transaction and customer data stored in Amazon RDS/S3",
+            },
+            "Flows": [
+                "Client → API Gateway → Lambda → (S3/RDS) → SageMaker/Bedrock → Response",
+                "SAP → (PI/PO|RFC) → EventBridge → Lambda → S3/RDS",
+                "Monitoring → Metrics+Logs → Alerts",
+            ],
+            "Non-Functional Goals": nonfunc,
+            "Assumptions and Risks": risks,
         }
         st.json(arch)
         # Tiny diagram with matplotlib
@@ -238,11 +244,25 @@ with D:
             return "Summary: Reduce churn risk with targeted offers, proactive outreach, and SLA-backed success plan."
         if "retention" in t:
             return "Email: We value your partnership. Based on your goals, we can improve ROI via tailored plan and credits."
-        return "Top factors: Low engagement, high ticket volume, expiring contract. Actions: CSM call, enablement, discount."
+        if "churn" in t:
+            st.markdown("**Simulating Multi-Step Analysis...**")
+            time.sleep(1)
+            st.info("Step 1: PII Scrubbing. Customer ID is C001, no PII found.")
+            time.sleep(1)
+            st.info("Step 2: Context Retrieval. Retrieving ticket history, usage logs, and contract data from S3.")
+            time.sleep(1)
+            st.info("Step 3: Reasoning & Explanation. Analyzing historical data.")
+            time.sleep(1)
+            return "Top factors for churn: Low engagement, high ticket volume (5 tickets last 30 days), expiring contract. Actions: CSM call, enablement, discount."
+        return "Not a valid task."
 
     if st.button("Run GenAI", key="genai"):
         out = local_gen(provider, task)
-        st.markdown(out)
+        # Check if the output is a multi-step process
+        if out:
+            pass # The function already handles displaying output
+        else:
+            st.markdown(out)
 
     st.markdown("**Optimization knobs**: batch size, max tokens, temperature; **Cost model**: requests × unit price; **Guardrails**: PII scrubbing, rate limits.")
 
@@ -261,7 +281,7 @@ with E:
         paths = {}
         for r in resources:
             paths[f"{basepath}/{r}"] = {
-                "get": {"summary": f"List {r}", "security": [{auth: []}], "responses": {"200": {"description": "OK"}}},
+                "get": {"summary": f"List {r}", "security": [{auth: []}], "responses": {"200": {"description": "OK", "content": {"application/json": {"example": [{"id": "cust1", "name": "Test User"}]}}}}},
                 "post": {"summary": f"Create {r[:-1]}", "security": [{auth: []}], "responses": {"201": {"description": "Created"}}}
             }
         oas = {"openapi": "3.0.0", "info": {"title": "Demo API", "version": "1.0.0"}, "x-gateway": {"rate_limit_rpm": rate}, "paths": paths}
@@ -298,5 +318,13 @@ with F:
     score = sum(1 for v in checks.values() if v) / len(checks)
     st.metric("Compliance Score", f"{score * 100:.0f}%")
     st.markdown("**Impact assessment**: changes to data contracts affect downstream scoring; recompute features, update versioned schemas, run backfills.")
+
+    st.subheader("Best Practices & Methodologies")
+    st.markdown("""
+- **DevOps/CI-CD:** Use automated pipelines (e.g., GitHub Actions, AWS CodePipeline) to build, test, and deploy code, ensuring consistency and speed.
+- **Infrastructure as Code (IaC):** Manage cloud resources (e.g., Lambda functions, API Gateways) using tools like Terraform or AWS CloudFormation for reproducibility and version control.
+- **Observability:** Implement comprehensive monitoring, logging, and tracing to proactively identify and resolve issues, ensuring a resilient and scalable solution.
+- **Agile/Scrum:** Use agile methodologies to break down complex projects into manageable sprints, allowing for frequent feedback and adaptation to changing requirements.
+    """)
 
 st.caption("Single-file MVP • free/open-source • simulates AWS/SAP, GenAI, APIs, and compliance to cover every line of the skills list.")
