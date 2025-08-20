@@ -150,19 +150,12 @@ with A:
             "Assumptions and Risks": risks,
         }
         st.json(arch)
-        # Tiny diagram with matplotlib
-        fig, ax = plt.subplots(figsize=(6, 2))
-        ax.axis('off')
-        ax.text(0.1, 0.6, 'Client', bbox=dict(boxstyle='round', fc='w'))
-        ax.text(0.3, 0.6, 'API GW', bbox=dict(boxstyle='round', fc='w'))
-        ax.text(0.5, 0.6, 'Lambda', bbox=dict(boxstyle='round', fc='w'))
-        ax.text(0.7, 0.6, 'S3/RDS', bbox=dict(boxstyle='round', fc='w'))
-        ax.text(0.9, 0.6, 'AI', bbox=dict(boxstyle='round', fc='w'))
-        ax.annotate('', (0.28, 0.62), (0.12, 0.62), arrowprops=dict(arrowstyle='->'))
-        ax.annotate('', (0.48, 0.62), (0.32, 0.62), arrowprops=dict(arrowstyle='->'))
-        ax.annotate('', (0.68, 0.62), (0.52, 0.62), arrowprops=dict(arrowstyle='->'))
-        ax.annotate('', (0.88, 0.62), (0.72, 0.62), arrowprops=dict(arrowstyle='->'))
-        st.pyplot(fig)
+        
+        st.markdown("""
+        ```
+        Client → API GW → Lambda → S3/RDS → AI
+        ```
+        """)
         st.success("Architecture generated. Use other tabs to validate implementation details.")
 
 # ======================================================================
