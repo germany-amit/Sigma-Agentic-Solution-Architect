@@ -9,7 +9,18 @@
 # NOTE: This application requires an Ollama server to be running and
 # the specified model to be available locally.
 #
-# Run with: streamlit run app.py
+# >>> STEPS TO RUN THIS APPLICATION <<<
+# 1. Ensure Ollama is installed and running on your machine.
+# 2. Open a terminal and run 'ollama pull mistral' to download the model.
+# 3. Create a folder named '.streamlit' in the same directory as app.py.
+# 4. Inside the '.streamlit' folder, create a file named 'secrets.toml'.
+# 5. Paste the following text into your 'secrets.toml' file:
+#
+#    [ollama]
+#    OLLAMA_HOST = "http://localhost:11434"
+#    OLLAMA_MODEL = "mistral"
+#
+# 6. Save the file and then run the app with 'streamlit run app.py'.
 #
 # Requirements: streamlit, autogen, pyyaml, ollama (client lib is autogen dependency)
 
@@ -29,15 +40,6 @@ st.markdown("---")
 
 # =====================================================================
 # 2. Configuration & Secrets Handling
-#
-# IMPORTANT: This section handles the Ollama configuration.
-# The user must configure their Streamlit secrets.toml file with:
-#
-# [ollama]
-# OLLAMA_HOST = "http://localhost:11434"
-# OLLAMA_MODEL = "llama3"
-#
-# The code will check for these values and provide an error if they are missing.
 # =====================================================================
 def get_ollama_config():
     """
@@ -56,7 +58,7 @@ def get_ollama_config():
             f"```toml\n"
             f"[ollama]\n"
             f"OLLAMA_HOST = \"http://localhost:11434\"\n"
-            f"OLLAMA_MODEL = \"llama3\"\n"
+            f"OLLAMA_MODEL = \"mistral\"\n"
             f"```"
         )
         st.stop()
@@ -151,5 +153,4 @@ if st.button("Run FMEA Analysis", key="run_fmea"):
             st.warning(
                 "Please ensure that the specified Ollama model is downloaded and running."
             )
-            st.code("Example: ollama run llama3")
-
+            st.code("Example: ollama run mistral")
