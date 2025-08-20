@@ -1,3 +1,5 @@
-autogen
 streamlit
-pyyaml
+numpy
+pandas
+matplotlib
+pydantic
